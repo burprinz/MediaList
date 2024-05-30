@@ -1,5 +1,7 @@
 package de.luiskun.manager.ui;
 
+import de.luiskun.manager.ui.windows.EntryCreator;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -11,6 +13,10 @@ public class Screen extends JPanel {
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setDoubleBuffered(true);
         this.setLayout(null);
+
+        EntryCreator ec = new EntryCreator();
+        this.add(ec);
+
     }
 
 }

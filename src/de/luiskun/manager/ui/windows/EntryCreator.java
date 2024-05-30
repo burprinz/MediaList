@@ -1,10 +1,8 @@
 package de.luiskun.manager.ui.windows;
 
-import javax.swing.*;
-
 public class EntryCreator extends Window {
 
-    JTextField entryName;
+    EntryInformation ei;
 
     public EntryCreator() {
         super();
@@ -12,11 +10,9 @@ public class EntryCreator extends Window {
 
     @Override
     public void initComponents() {
-        int x = 10, y = 10;
-
-        JLabel entryNameInfo = new JLabel("Entry Name");
-
-        entryName = new JTextField();
-
+        ei = new EntryInformation(this);
+        ei.setEntry(currentEntries.get(0));
+        this.add(ei);
     }
+
 }

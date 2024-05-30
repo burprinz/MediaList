@@ -12,12 +12,17 @@ public class Entry {
     /**
      * Kategorie. z.B Serie, Film, Buch,...
      */
-    String category;
+    String type;
 
     /**
      * Wie oft rewatched.
      */
     int reAmount;
+
+    /**
+     * Bewertung 1-10
+     */
+    int rating;
 
     /**
      * Mit Kategorien? z.B Staffeln, Buecher,...
@@ -33,11 +38,6 @@ public class Entry {
      * Ohne Kategorie, Mit sameLength: Laenge
      */
     int length;
-
-    /**
-     * Bewertung 1-10
-     */
-    int rating;
 
     /**
      * Ohne Kategorien: Episodenliste
@@ -66,12 +66,12 @@ public class Entry {
         this.name = name;
     }
 
-    public String getCategory() {
-        return category;
+    public String getType() {
+        return type;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getReAmount() {

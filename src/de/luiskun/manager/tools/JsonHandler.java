@@ -1,6 +1,7 @@
 package de.luiskun.manager.tools;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.luiskun.manager.Quicksort;
 import de.luiskun.manager.dataholder.Entry;
 
 import java.io.File;
@@ -70,7 +71,7 @@ public class JsonHandler {
             }
         }
 
-        return tags;
+        return Quicksort.sort(tags);
     }
 
     public static List<String> readAllCats(List<Entry> entries) {
@@ -80,17 +81,17 @@ public class JsonHandler {
         for (Entry e : entries) {
             boolean found = false;
             for (String ss : cats) {
-                if (e.getCategory().equals(ss)) {
+                if (e.getType().equals(ss)) {
                     found = true;
                     break;
                 }
             }
             if (!found) {
-                cats.add(e.getCategory());
+                cats.add(e.getType());
             }
         }
 
-        return cats;
+        return Quicksort.sort(cats);
     }
 
 }

@@ -6,18 +6,19 @@ import de.luiskun.manager.ui.Screen;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class Window extends JPanel {
 
-    List<Entry> currentEntries;
-    List<String> currentTags;
-    List<String> currentCats;
+    public List<Entry> currentEntries;
+    public List<String> currentTags;
+    public List<String> currentCats;
 
     public Window() {
-        this.setPreferredSize(new Dimension(Screen.WIDTH, Screen.HEIGHT));
         this.setDoubleBuffered(true);
         this.setLayout(null);
+        this.setBounds(0, 0, Screen.WIDTH, Screen.HEIGHT);
 
         currentEntries = JsonHandler.readEntries();
         currentTags = JsonHandler.readAllTags(currentEntries);
