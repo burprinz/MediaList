@@ -1,10 +1,11 @@
-package de.luiskun.manager.ui.windows;
+package de.luiskun.manager.ui.windows.entryEditing;
 
 import de.luiskun.manager.dataholder.Category;
 import de.luiskun.manager.dataholder.Entry;
 import de.luiskun.manager.dataholder.Episode;
 import de.luiskun.manager.ui.Konstanten;
 import de.luiskun.manager.ui.Screen;
+import de.luiskun.manager.ui.windows.Window;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class EntryInformation extends JPanel implements ActionListener {
 
-    Window w;
+    de.luiskun.manager.ui.windows.Window w;
 
     /**
      * Basic Editor
@@ -40,7 +41,7 @@ public class EntryInformation extends JPanel implements ActionListener {
     JScrollPane categoryScroll;
     JSpinner sameMin, sameSec;
     JPanel lenPanel;
-    List<JTextField> names;
+    //List<JPanel> names;
     List<NameAmTimePicker> cats;
     JButton addNewCatOrName;
 
@@ -214,6 +215,14 @@ public class EntryInformation extends JPanel implements ActionListener {
                         }
                     }
                     if (isNew) {
+                        if (e.getTags() != null) {
+                            e.getTags().clear();
+                            for (JCheckBox c : tagBoxes) {
+                                if (c.isSelected()) {
+                                    e.getTags().add(c.getText());
+                                }
+                            }
+                        }
                         w.currentTags.add(netTag);
                         resetTagButtons();
                     }
@@ -326,9 +335,10 @@ public class EntryInformation extends JPanel implements ActionListener {
 
             categoryScroll = new JScrollPane(categoryContent);
             categoryScroll.setBounds(x, y, 510, 550);
+            categoryScroll.setHorizontalScrollBar(null);
             category.add(categoryScroll);
 
-            names = new ArrayList<>();
+            //names = new ArrayList<>();
             cats = new ArrayList<>();
         }
 
@@ -370,6 +380,101 @@ public class EntryInformation extends JPanel implements ActionListener {
     private void updateCategories(boolean len, boolean cat) {
         lenPanel.setVisible(len);
 
+        e.setSameLength(len);
+        e.setWithCategories(cat);
+
+        int id;
+
+        if (e.isSameLength()) {
+            if (e.isWithCategories()) {
+                id = 1;
+            } else {
+                id = 3;
+            }
+        } else {
+            if (e.isWithCategories()) {
+                id = 0;
+            } else {
+                id = 2;
+            }
+        }
+
+        categoryContent.removeAll();
+
+        if (cats != null) {
+            cats.clear();
+        }
+        cats = new ArrayList<>();
+
+        int size = 1;
+        if (!withCategories.isSelected()) {
+            if (e != null && e.getEpisodes() != null)  {
+                int i = 0;
+                for (Episode c : e.getEpisodes()) {
+                    NameAmTimePicker n = new NameAmTimePicker(id, this);
+                    n.setBorder(Konstanten.BLACKBORDER);
+
+                    n.name.setText(c.getName());
+
+                    if (id == 2) {
+                        int secs = c.getLength()%60;
+                        int mins = c.getLength()/60;
+                        n.minutes.setValue(mins);
+                        n.seconds.setValue(secs);
+                    }
+
+                    n.removeButton.setActionCommand("remCat-" + i);
+                    cats.add(n);
+                    categoryContent.add(n);
+                    i++;
+                }
+                size += e.getEpisodes().size();
+            }
+        } else {
+            if (e != null && e.getCategories() != null)  {
+                int i = 0;
+                for (Category c : e.getCategories()) {
+                    NameAmTimePicker n = new NameAmTimePicker(id, this);
+                    n.setBorder(Konstanten.BLACKBORDER);
+                    n.name.setText(c.getName());
+
+                    if (id == 0) {
+                        n.amount.setValue(c.getAmEpisodes());
+                        int secs = c.getLength()%60;
+                        int mins = c.getLength()/60;
+                        n.minutes.setValue(mins);
+                        n.seconds.setValue(secs);
+                    } else if (id == 1) {
+                        n.amount.setValue(c.getAmEpisodes());
+                    } else if (id == 2) {
+                        int secs = c.getLength()%60;
+                        int mins = c.getLength()/60;
+                        n.minutes.setValue(mins);
+                        n.seconds.setValue(secs);
+                    }
+
+                    n.removeButton.setActionCommand("remCat-" + i);
+                    cats.add(n);
+                    categoryContent.add(n);
+                    i++;
+                }
+                size += e.getCategories().size();
+            }
+        }
+
+        addNewCatButton();
+
+        categoryContent.setPreferredSize(new Dimension(500, 30*size));
+        categoryContent.setBorder(Konstanten.BLACKBORDER);
+        categoryContent.repaint();
+        categoryContent.revalidate();
+    }
+
+    /*
+
+    private void updateCategories(boolean len, boolean cat) {
+        lenPanel.setVisible(len);
+
 
         e.setSameLength(len);
         e.setWithCategories(cat);
@@ -389,6 +494,7 @@ public class EntryInformation extends JPanel implements ActionListener {
                 updateNotWithout();
             }
         }
+
     }
 
     private void updateSameWith() {
@@ -403,19 +509,21 @@ public class EntryInformation extends JPanel implements ActionListener {
 
         int size = 1;
         if (e != null && e.getCategories() != null)  {
+            int i = 0;
             for (Category c : e.getCategories()) {
                 NameAmTimePicker n = new NameAmTimePicker(id, this);
                 n.setBorder(Konstanten.BLACKBORDER);
                 n.name.setText(c.getName());
+                n.removeButton.setActionCommand("remCat-" + i);
                 n.amount.setValue(c.getAmEpisodes());
                 cats.add(n);
                 categoryContent.add(n);
+                i++;
             }
             size += e.getCategories().size();
         }
 
-        addNewCatOrName = new JButton("New");
-        categoryContent.add(addNewCatOrName);
+        addNewCatButton();
 
         categoryContent.setPreferredSize(new Dimension(500, 30*size));
         categoryContent.setBorder(Konstanten.BLACKBORDER);
@@ -436,19 +544,34 @@ public class EntryInformation extends JPanel implements ActionListener {
         int am = 1;
 
         if (e != null && e.getEpisodes() != null)  {
+            int i = 0;
             for (Episode e : e.getEpisodes()) {
+                JPanel p = new JPanel();
+                p.setPreferredSize(new Dimension(500, 25));
+                p.setLayout(null);
                 JTextField jtf = new JTextField();
                 jtf.setText(e.getName());
-                names.add(jtf);
-                categoryContent.add(jtf);
+                jtf.setBounds(0, 0, 440, 25);
+                p.add(jtf);
+                JButton but = new JButton("rem");
+                but.setBounds(440, 0, 60, 25);
+                but.addActionListener(this);
+                but.setActionCommand("remCat-" + i);
+                p.add(but);
+
+                names.add(p);
+                categoryContent.add(p);
+                i++;
             }
             am += e.getEpisodes().size();
         }
 
-        addNewCatOrName = new JButton("New");
-        categoryContent.add(addNewCatOrName);
+        addNewCatButton();
 
-        categoryContent.setPreferredSize(new Dimension(500, am*25));
+        categoryContent.setPreferredSize(new Dimension(500, 30*am));
+        categoryContent.setBorder(Konstanten.BLACKBORDER);
+        categoryContent.repaint();
+        categoryContent.revalidate();
     }
 
     private void updateNotWith() {
@@ -463,9 +586,12 @@ public class EntryInformation extends JPanel implements ActionListener {
 
         int size = 1;
         if (e != null && e.getCategories() != null)  {
+            int i = 0;
             for (Category c : e.getCategories()) {
                 NameAmTimePicker n = new NameAmTimePicker(id, this);
                 n.setBorder(Konstanten.BLACKBORDER);
+
+                n.removeButton.setActionCommand("remCat-" + i);
                 n.name.setText(c.getName());
                 n.amount.setValue(c.getAmEpisodes());
                 int secs = c.getLength()%60;
@@ -474,14 +600,14 @@ public class EntryInformation extends JPanel implements ActionListener {
                 n.seconds.setValue(secs);
                 cats.add(n);
                 categoryContent.add(n);
+                i++;
             }
             size += e.getCategories().size();
         }
 
-        addNewCatOrName = new JButton("New");
-        categoryContent.add(addNewCatOrName);
+        addNewCatButton();
 
-        categoryContent.setPreferredSize(new Dimension(500, 50*size));
+        categoryContent.setPreferredSize(new Dimension(500, 30*size));
         categoryContent.setBorder(Konstanten.BLACKBORDER);
         categoryContent.repaint();
         categoryContent.revalidate();
@@ -498,10 +624,12 @@ public class EntryInformation extends JPanel implements ActionListener {
         cats = new ArrayList<>();
 
         int size = 1;
-        if (e != null && e.getCategories() != null)  {
-            for (Category c : e.getCategories()) {
+        if (e != null && e.getEpisodes() != null)  {
+            int i = 0;
+            for (Episode c : e.getEpisodes()) {
                 NameAmTimePicker n = new NameAmTimePicker(id, this);
                 n.setBorder(Konstanten.BLACKBORDER);
+                n.removeButton.setActionCommand("remCat-" + i);
                 n.name.setText(c.getName());
                 int secs = c.getLength()%60;
                 int mins = c.getLength()/60;
@@ -509,18 +637,52 @@ public class EntryInformation extends JPanel implements ActionListener {
                 n.seconds.setValue(secs);
                 cats.add(n);
                 categoryContent.add(n);
+                i++;
             }
-            size += e.getCategories().size();
+            size += e.getEpisodes().size();
         }
 
-        addNewCatOrName = new JButton("New");
-        categoryContent.add(addNewCatOrName);
+        addNewCatButton();
 
-        categoryContent.setPreferredSize(new Dimension(500, 50*size));
+        categoryContent.setPreferredSize(new Dimension(500, 30*size));
         categoryContent.setBorder(Konstanten.BLACKBORDER);
         categoryContent.repaint();
         categoryContent.revalidate();
 
+    }
+
+     */
+
+    private void addNewCatButton() {
+        addNewCatOrName = new JButton("New");
+        addNewCatOrName.addActionListener(this);
+        addNewCatOrName.setActionCommand("newCat");
+        categoryContent.add(addNewCatOrName);
+    }
+
+    private void updatePickerInfos() {
+        if (!withCategories.isSelected()) {
+            e.getEpisodes().clear();
+            for (NameAmTimePicker n : cats) {
+                Episode ep = new Episode();
+                ep.setName(n.getName());
+                if (n.minutes != null) {
+                    ep.setLength(n.getTime());
+                }
+                e.getEpisodes().add(ep);
+            }
+        } else {
+            e.getCategories().clear();
+            for (NameAmTimePicker n : cats) {
+                Category ca = new Category();
+                ca.setName(n.getName());
+                if (n.minutes != null) {
+                    ca.setLength(n.getTime());
+                }
+                ca.setAmEpisodes(n.getAm());
+                e.getCategories().add(ca);
+            }
+        }
     }
 
     public void setEntry(Entry e) {
@@ -530,13 +692,80 @@ public class EntryInformation extends JPanel implements ActionListener {
         amountRewatched.setValue(e.getReAmount());
         withCategories.setSelected(e.isWithCategories());
         sameLength.setSelected(e.isSameLength());
+        sameMin.setValue(e.getLength()/60);
+        sameSec.setValue(e.getLength()%60);
 
         resetTagButtons();
         updateCategories(e.isSameLength(), e.isWithCategories());
     }
 
+    public Entry getEntry() {
+        Entry newEntry = new Entry();
+        newEntry.setName(entryName.getText());
+        newEntry.setType(categorySelector.getSelectedItem().toString());
+        newEntry.setReAmount((int) amountRewatched.getValue());
+        newEntry.setRating((int) ratingSetter.getValue());
+        newEntry.setWithCategories(withCategories.isSelected());
+        newEntry.setSameLength(sameLength.isSelected());
+        newEntry.setLength((int)sameMin.getValue()*60 + (int)sameSec.getValue());
+        List<Episode> episodes = new ArrayList<>();
+        List<Category> categories = new ArrayList<>();
+        for (NameAmTimePicker p : cats) {
+            Episode ep = new Episode();
+            Category cat = new Category();
+            ep.setName(p.getName());
+            if (p.minutes != null) {
+                ep.setLength(p.getTime());
+                cat.setLength(p.getTime());
+            }
+            cat.setName(p.getName());
+            if (p.amount != null) {
+                cat.setAmEpisodes(p.getAm());
+            }
+            episodes.add(ep);
+            categories.add(cat);
+        }
+        newEntry.setTags(new ArrayList<>());
+        for (JCheckBox t : tagBoxes) {
+            if (t.isSelected()) newEntry.getTags().add(t.getText());
+        }
+        newEntry.setEpisodes(episodes);
+        newEntry.setCategories(categories);
+        return newEntry;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String com = e.getActionCommand();
+        updatePickerInfos();
+        if (com.equals("newCat")) {
+            if (!this.e.isWithCategories()) {
+                // Episode
+                Episode ep = new Episode();
+                if (this.e.getEpisodes() == null) {
+                    this.e.setEpisodes(new ArrayList<>());
+                }
+                ep.setName("Episode " + (this.e.getEpisodes().size()+1));
+                this.e.getEpisodes().add(ep);
+            } else {
+                // Kategorie
+                Category cat = new Category();
+                if (this.e.getCategories() == null) {
+                    this.e.setCategories(new ArrayList<>());
+                }
+                cat.setName("Category " + (this.e.getCategories().size() + 1));
+                this.e.getCategories().add(cat);
+            }
+            updateCategories(this.e.isSameLength(), this.e.isWithCategories());
+        } else if (com.startsWith("remCat-")) {
+
+            String name = com.substring(7);
+            if (this.e.isWithCategories()) {
+                this.e.getCategories().remove(Integer.parseInt(name));
+            } else {
+                this.e.getEpisodes().remove(Integer.parseInt(name));
+            }
+            updateCategories(this.e.isSameLength(), this.e.isWithCategories());
+        }
     }
 }

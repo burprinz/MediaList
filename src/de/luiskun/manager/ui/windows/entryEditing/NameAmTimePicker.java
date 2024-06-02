@@ -1,4 +1,4 @@
-package de.luiskun.manager.ui.windows;
+package de.luiskun.manager.ui.windows.entryEditing;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,7 +7,7 @@ public class NameAmTimePicker extends JPanel {
 
     public JSpinner minutes, seconds, amount;
     public JTextField name;
-    JButton removeButton;
+    public JButton removeButton;
 
     EntryInformation w;
 
@@ -19,7 +19,7 @@ public class NameAmTimePicker extends JPanel {
 
         int x = 0;
         name = new JTextField();
-        name.setBounds(x, 0, 340, 25);
+        name.setBounds(x, 0, 300, 25);
         this.add(name);
         x += 300;
 
@@ -57,10 +57,14 @@ public class NameAmTimePicker extends JPanel {
                 this.add(seconds);
                 x += 75;
                 break;
+            case 3:
+                name.setBounds(0, 0, 440, 25);
+                break;
         }
 
         removeButton = new JButton("rem");
-        removeButton.setBounds(x, 0, 60, 25);
+        removeButton.setBounds(440, 0, 60, 25);
+        removeButton.addActionListener(w);
         this.add(removeButton);
 
     }

@@ -1,5 +1,6 @@
 package de.luiskun.manager.dataholder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Entry {
@@ -55,7 +56,9 @@ public class Entry {
     List<String> tags;
 
     public Entry() {
-
+        episodes = new ArrayList<>();
+        categories = new ArrayList<>();
+        tags = new ArrayList<>();
     }
 
     public String getName() {
@@ -137,4 +140,5 @@ public class Entry {
     public void setTags(List<String> tags) {
         this.tags = tags;
     }
+
 }

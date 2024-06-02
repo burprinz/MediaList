@@ -9,7 +9,7 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class Window extends JPanel {
+public abstract class Window extends JPanel implements Updatable{
 
     public List<Entry> currentEntries;
     public List<String> currentTags;
@@ -29,4 +29,9 @@ public abstract class Window extends JPanel {
 
     public abstract void initComponents();
 
+    @Override
+    public abstract void update();
+
+    @Override
+    public abstract void paintComponent(Graphics g);
 }
