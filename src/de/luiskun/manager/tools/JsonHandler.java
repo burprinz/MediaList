@@ -71,7 +71,7 @@ public class JsonHandler {
             }
         }
 
-        return Quicksort.sort(tags);
+        return Quicksort.sortStr(tags);
     }
 
     public static List<String> readAllCats(List<Entry> entries) {
@@ -91,7 +91,7 @@ public class JsonHandler {
             }
         }
 
-        return Quicksort.sort(cats);
+        return Quicksort.sortStr(cats);
     }
 
 }
