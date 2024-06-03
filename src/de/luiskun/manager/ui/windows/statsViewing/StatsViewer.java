@@ -40,15 +40,10 @@ public class StatsViewer extends Window implements ActionListener {
         int y = 10;
         int w = Screen.HEIGHT - 20;
         int h = Screen.HEIGHT - 20;
-        drawPanel = new EntryVisualizer(currentEntries);
+        drawPanel = new EntryVisualizer(currentEntries, this);
         tableScroll = new JScrollPane(drawPanel);
         tableScroll.setBounds(x, y, w, h);
         this.add(tableScroll);
-        switchToTable();
-    }
-
-    private void switchToTable() {
-
     }
 
     private void initControl() {
@@ -76,7 +71,7 @@ public class StatsViewer extends Window implements ActionListener {
         g2.setColor(Color.WHITE);
         g2.fillRect(0, 0, Screen.WIDTH, Screen.HEIGHT);
 
-
+        drawPanel.repaint();
     }
 
 

@@ -16,24 +16,35 @@ import java.util.List;
 public class EntryVisualizer extends JPanel {
 
     public static final int TABLEMODE = 0;
+    public static final int DIAGRAMMODE = 1;
+    StatsViewer sv;
     int mode;
     int w, h;
     List<Entry> entries;
     List<Entry> sortedEntries;
+    DiagramInformation diagram;
 
-    public EntryVisualizer(List<Entry> entries) {
+    public EntryVisualizer(List<Entry> entries, StatsViewer sv) {
         this.setLayout(null);
+        this.sv = sv;
         this.entries = entries;
-        switchToTable();
+        switchV(TABLEMODE);
     }
 
-    private void changeTable(List<Integer> pos) {
-        sortedEntries.clear();
-        for (int i : pos) {
-            sortedEntries.add(entries.get(i));
+    /**
+     * Eintragstabelle
+     */
+
+    public void switchV(int mode) {
+        this.mode = mode;
+        switch (mode) {
+            case TABLEMODE:
+                switchToTable();
+                break;
+            case DIAGRAMMODE:
+                switchToDiagram();
+                break;
         }
-        updateTableButtons();
-        updateTableEntries();
     }
 
     public void switchToTable() {
@@ -117,6 +128,15 @@ public class EntryVisualizer extends JPanel {
         x += 200;
     }
 
+    private void changeTable(List<Integer> pos) {
+        sortedEntries.clear();
+        for (int i : pos) {
+            sortedEntries.add(entries.get(i));
+        }
+        updateTableButtons();
+        updateTableEntries();
+    }
+
     private void updateTableEntries() {
         w = 775;
         int eh = 30;
@@ -158,7 +178,54 @@ public class EntryVisualizer extends JPanel {
         }
     }
 
-    public int getSeconds(Entry e) {
+    /**
+     * Saeulendiagramm
+     * 0 = Type
+     * 1 = Rating
+     * 2 = Tags
+     */
+    public void switchToDiagram() {
+        this.removeAll();
+        initDiagramButtons();
+        diagram = new DiagramInformation(entries, sv.currentCats, sv.currentTags, 2);
+        w = diagram.totalW;
+        h = 660;
+        this.setPreferredSize(new Dimension(w, h));
+    }
+
+    private void initDiagramButtons() {
+        int x = 0;
+        int y = 0;
+
+        JButton typeB = new JButton("Type");
+        typeB.setBounds(x, y, 100, 30);
+        typeB.addActionListener(list -> {
+
+        });
+        this.add(typeB);
+        x += 100;
+
+        JButton rateB = new JButton("Rating");
+        rateB.setBounds(x, y, 100, 30);
+        rateB.addActionListener(list -> {
+
+        });
+        this.add(rateB);
+        x += 100;
+
+        JButton tagB = new JButton("Tag");
+        tagB.setBounds(x, y, 100, 30);
+        tagB.addActionListener(list -> {
+
+        });
+        this.add(tagB);
+        x += 100;
+
+        w = x;
+    }
+
+
+    public static int getSeconds(Entry e) {
         int len = 0;
         if (e.isWithCategories()) {
             if (e.isSameLength()) {
@@ -184,7 +251,7 @@ public class EntryVisualizer extends JPanel {
         return len;
     }
 
-    private String createLenString(int len) {
+    private static String createLenString(int len) {
         String s = "";
 
         int minSec = 60;
@@ -222,6 +289,17 @@ public class EntryVisualizer extends JPanel {
 
 
         return s;
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        if (mode == DIAGRAMMODE) {
+            if (diagram != null) {
+                diagram.draw(g2);
+            }
+        }
     }
 
 }
