@@ -52,10 +52,10 @@ public class EntryInformation extends JPanel implements ActionListener {
         e = new Entry();
 
         this.setLayout(null);
-        this.setBounds(10, 10, Screen.WIDTH - 20, Screen.HEIGHT - 50);
+        this.setBounds(0, 0, Screen.WIDTH, Screen.HEIGHT - 40);
         this.setBorder(Konstanten.BLACKBORDER);
 
-        int x = 10, y = 10;
+        int x = 20, y = 10;
 
         JLabel basicInfosInfo = new JLabel("<html><u>Basic Information</u></html>");
         basicInfosInfo.setFont(basicInfosInfo.getFont().deriveFont(Font.BOLD, 20));
@@ -129,7 +129,7 @@ public class EntryInformation extends JPanel implements ActionListener {
             newCategoryName = new JTextField();
             newCategoryName.setBounds(x, y, 90, 25);
             basicInfosPanel.add(newCategoryName);
-            x = 10;
+            x = 20;
             y += 50;
 
             JLabel rewatchInfo = new JLabel("Rewatched");
@@ -243,7 +243,7 @@ public class EntryInformation extends JPanel implements ActionListener {
         }
         resetTagButtons();
 
-        x = 340;
+        x = 350;
         y = 10;
 
         JLabel seasonInfo = new JLabel("<html><u>Categories</u></html>");

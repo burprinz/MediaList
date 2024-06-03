@@ -17,16 +17,20 @@ public class StatsViewer extends Window implements ActionListener {
     /**
      * Swing components
      */
-    JPanel controlPanel, drawPanel;
+    JPanel controlPanel;
     JScrollPane tableScroll;
-    JButton b;
+    JButton goBackB;
+    EntryVisualizer drawPanel;
+
+    ButtonGroup modeGroup;
+    JRadioButton tableSelect, diagramSelect;
 
     boolean tagsWindowOpened;
 
     Map<String, ButtonFunction> commands;
 
-    public StatsViewer() {
-        super();
+    public StatsViewer(Screen s) {
+        super(s);
     }
 
     @Override
@@ -57,6 +61,36 @@ public class StatsViewer extends Window implements ActionListener {
         controlPanel.setBorder(Konstanten.BLACKBORDER);
         controlPanel.setLayout(null);
         this.add(controlPanel);
+
+        x = 10;
+        y = 10;
+        w -= 20;
+        h = 30;
+
+        tableSelect = new JRadioButton("Table");
+        tableSelect.setBounds(x, y, w, h);
+        tableSelect.setActionCommand("modeSwitch");
+        tableSelect.addActionListener(this);
+        controlPanel.add(tableSelect);
+        y += (h+5);
+
+        diagramSelect = new JRadioButton("Diagram");
+        diagramSelect.setBounds(x, y, w, h);
+        diagramSelect.setActionCommand("modeSwitch");
+        diagramSelect.addActionListener(this);
+        controlPanel.add(diagramSelect);
+        y += (h+5);
+
+        modeGroup = new ButtonGroup();
+        modeGroup.add(tableSelect);
+        modeGroup.add(diagramSelect);
+
+        goBackB = new JButton("Back");
+        goBackB.setBounds(x, y, w, h);
+        goBackB.addActionListener(list -> {
+            s.goBackToMenu();
+        });
+        controlPanel.add(goBackB);
     }
 
     @Override
@@ -66,6 +100,7 @@ public class StatsViewer extends Window implements ActionListener {
 
     @Override
     public void paintComponent(Graphics g) {
+        super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(Color.WHITE);
@@ -77,6 +112,13 @@ public class StatsViewer extends Window implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        String com = e.getActionCommand();
+        if (com.startsWith("modeSwitch")) {
+            if (tableSelect.isSelected()) {
+                drawPanel.switchV(EntryVisualizer.TABLEMODE);
+            } else if (diagramSelect.isSelected()) {
+                drawPanel.switchV(EntryVisualizer.DIAGRAMMODE);
+            }
+        }
     }
 }

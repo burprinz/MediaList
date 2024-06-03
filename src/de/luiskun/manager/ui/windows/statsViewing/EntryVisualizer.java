@@ -4,6 +4,7 @@ import de.luiskun.manager.Quicksort;
 import de.luiskun.manager.dataholder.Category;
 import de.luiskun.manager.dataholder.Entry;
 import de.luiskun.manager.dataholder.Episode;
+import de.luiskun.manager.tools.EntryCalculator;
 import de.luiskun.manager.ui.Konstanten;
 import de.luiskun.manager.ui.Screen;
 import de.luiskun.manager.ui.windows.entryEditing.EntryCreator;
@@ -49,6 +50,8 @@ public class EntryVisualizer extends JPanel {
 
     public void switchToTable() {
         this.removeAll();
+
+        System.out.println(1);
 
         sortedEntries = new ArrayList<>();
         for (Entry e : entries) {
@@ -120,7 +123,7 @@ public class EntryVisualizer extends JPanel {
         time.addActionListener(list -> {
             List<Integer> strs = new ArrayList<>();
             for (Entry e : entries) {
-                strs.add(getSeconds(e));
+                strs.add(EntryCalculator.getSeconds(e));
             }
             changeTable(Quicksort.insInt(strs));
         });
@@ -169,7 +172,7 @@ public class EntryVisualizer extends JPanel {
             ra.setBorder(Konstanten.BLACKBORDER);
             content.add(ra);
             xp += 70;
-            JLabel len = new JLabel(createLenString(getSeconds(e)), SwingConstants.CENTER);
+            JLabel len = new JLabel(EntryCalculator.createLenString(EntryCalculator.getSeconds(e)), SwingConstants.CENTER);
             len.setBounds(xp, yp, 200, eh);
             len.setBorder(Konstanten.BLACKBORDER);
             content.add(len);
@@ -187,7 +190,7 @@ public class EntryVisualizer extends JPanel {
     public void switchToDiagram() {
         this.removeAll();
         initDiagramButtons();
-        diagram = new DiagramInformation(entries, sv.currentCats, sv.currentTags, 1);
+        diagram = new DiagramInformation(entries, sv.currentCats, sv.currentTags, 5);
         w = diagram.totalW;
         h = 660;
         this.setPreferredSize(new Dimension(w, h));
@@ -222,73 +225,6 @@ public class EntryVisualizer extends JPanel {
         x += 100;
 
         w = x;
-    }
-
-
-    public static int getSeconds(Entry e) {
-        int len = 0;
-        if (e.isWithCategories()) {
-            if (e.isSameLength()) {
-                // Kategorie selbe laenge
-                for (Category c : e.getCategories()) {
-                    len += e.getLength() * c.getAmEpisodes();
-                }
-            } else {
-                // Kategorie laenge versch
-                for (Category c : e.getCategories()) {
-                    len += c.getLength() * c.getAmEpisodes();
-                }
-            }
-        } else {
-            if (e.isSameLength()) {
-                len = e.getEpisodes().size() * e.getLength();
-            } else {
-                for (Episode ee : e.getEpisodes()) {
-                    len += ee.getLength();
-                }
-            }
-        }
-        return len;
-    }
-
-    private static String createLenString(int len) {
-        String s = "";
-
-        int minSec = 60;
-        int hourSec = minSec*60;
-        int daySec = hourSec*24;
-        int yearSec = daySec*365;
-        int decSec = yearSec*10;
-
-        int dec = len / decSec;
-        if (dec > 0) {
-            s += dec + "dec / ";
-            len = len%decSec;
-        }
-        int a = len / yearSec;
-        if (a > 0) {
-            s += a + "a / ";
-            len = len%yearSec;
-        }
-        int d = len / daySec;
-        if (d > 0) {
-            s += d + "d / ";
-            len = len%daySec;
-        }
-        int h = len / hourSec;
-        if (h > 0) {
-            s += h + "h / ";
-            len = len%hourSec;
-        }
-        int min = len / minSec;
-        if (min > 0) {
-            s += min + "min / ";
-            len = len%minSec;
-        }
-        s += len + "s";
-
-
-        return s;
     }
 
     @Override

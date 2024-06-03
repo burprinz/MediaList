@@ -15,10 +15,14 @@ public abstract class Window extends JPanel implements Updatable{
     public List<String> currentTags;
     public List<String> currentCats;
 
-    public Window() {
+    protected Screen s;
+
+    public Window(Screen s) {
         this.setDoubleBuffered(true);
         this.setLayout(null);
         this.setBounds(0, 0, Screen.WIDTH, Screen.HEIGHT);
+
+        this.s = s;
 
         currentEntries = JsonHandler.readEntries();
         currentTags = JsonHandler.readAllTags(currentEntries);
@@ -33,5 +37,7 @@ public abstract class Window extends JPanel implements Updatable{
     public abstract void update();
 
     @Override
-    public abstract void paintComponent(Graphics g);
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+    }
 }

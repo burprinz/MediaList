@@ -1,6 +1,7 @@
 package de.luiskun.manager.ui.windows.statsViewing;
 
 import de.luiskun.manager.dataholder.Entry;
+import de.luiskun.manager.tools.EntryCalculator;
 import de.luiskun.manager.tools.Geo;
 
 import java.awt.*;
@@ -31,45 +32,72 @@ public class DiagramInformation {
         // 3 = Type len
         // 4 = Rating len
         // 5 = Tag len
-        if (mode == 0) {
-            // names setzen
+
+        int headMode = mode % 3;
+        if (headMode == 0) {
+            // Type
             names = new String[types.size()];
             values = new int[types.size()];
             valueShow = new String[types.size()];
-
             for (int i = 0; i < types.size(); i++) names[i] = types.get(i);
-
             initValueHashmap();
 
-            for (Entry e : entries) {
-                values[valueIndex.get(e.getType())]++;
+            if (mode == 0) {
+                for (Entry e : entries)
+                    values[valueIndex.get(e.getType())]++;
+            } else {
+                for (Entry e : entries)
+                    values[valueIndex.get(e.getType())]+=EntryCalculator.getSeconds(e);
             }
 
-            initValueShowForVal();
-        } else if (mode == 1) {
+        } else if (headMode == 1) {
+            // Rating
             names = new String[10];
             values = new int[10];
             valueShow = new String[10];
-
             for (int i = 1; i <= 10; i++) names[i-1] = "" + i;
 
-            for (Entry e : entries) {
-                values[e.getRating()-1]++;
+            if (mode == 1) {
+                for (Entry e : entries)
+                    values[e.getRating()-1]++;
+            } else {
+                for (Entry e : entries)
+                    values[e.getRating()-1]+=EntryCalculator.getSeconds(e);
             }
-
-            initValueShowForVal();
-        } else if (mode == 2) {
+        } else {
+            // Tag
             names = new String[tags.size()];
             values = new int[tags.size()];
             valueShow = new String[tags.size()];
-
             for (int i = 0; i < tags.size(); i++) names[i] = tags.get(i);
-
             initValueHashmap();
 
-            for (Entry e : entries) {
-                for (String s : e.getTags()) values[valueIndex.get(s)]++;
+            if (mode == 2) {
+                for (Entry e : entries) {
+                    for (String s : e.getTags()) values[valueIndex.get(s)]++;
+                }
+            } else {
+                for (Entry e : entries) {
+                    for (String s : e.getTags())
+                        values[valueIndex.get(s)]+=EntryCalculator.getSeconds(e);
+                }
             }
+        }
+
+        if (mode / 3 == 0) {
+            initValueShowForVal();
+        } else {
+            initValueShowForLen();
+        }
+
+        if (mode == 0) {
+            // names setzen
+        } else if (mode == 1) {
+        } else if (mode == 2) {
+
+
+
+
 
             initValueShowForVal();
         }
@@ -88,6 +116,12 @@ public class DiagramInformation {
     private void initValueShowForVal() {
         for (int i = 0; i < values.length; i++) {
             valueShow[i] = "" + values[i];
+        }
+    }
+
+    private void initValueShowForLen() {
+        for (int i = 0; i < values.length; i++) {
+            valueShow[i] = EntryCalculator.createLenString(values[i]);
         }
     }
 

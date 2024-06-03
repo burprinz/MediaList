@@ -10,9 +10,12 @@ import java.awt.*;
 public class Screen extends JPanel implements Runnable {
 
     public static final int WIDTH = 900, HEIGHT = 700;
-
     Thread t;
     int fps = 60;
+
+    JPanel menu;
+
+    JButton createButton, editButton, statsButton;
 
     Window currentWindow;
 
@@ -21,9 +24,49 @@ public class Screen extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.setLayout(null);
 
-        currentWindow = new StatsViewer();
-        this.add(currentWindow);
+        menu = new JPanel();
+        menu.setBounds(0, 0, WIDTH, HEIGHT);
+        menu.setLayout(null);
+        this.add(menu);
 
+        int x = 10;
+        int y = 10;
+
+        createButton = new JButton("Create Element");
+        createButton.setBounds(x, y, 150, 30);
+        createButton.addActionListener(list -> {
+            switchWindow(new EntryCreator(this));
+        });
+        menu.add(createButton);
+        y += 40;
+
+        editButton = new JButton("Edit Element");
+        editButton.setBounds(x, y, 150, 30);
+        editButton.addActionListener(list -> {
+
+        });
+        menu.add(editButton);
+        y += 40;
+
+        statsButton = new JButton("Show Stats");
+        statsButton.setBounds(x, y, 150, 30);
+        statsButton.addActionListener(list -> {
+            switchWindow(new StatsViewer(this));
+        });
+        menu.add(statsButton);
+
+    }
+
+    private void switchWindow(Window w) {
+        menu.setVisible(false);
+        currentWindow = w;
+        this.add(currentWindow);
+    }
+
+    public void goBackToMenu() {
+        this.remove(currentWindow);
+        currentWindow = null;
+        menu.setVisible(true);
     }
 
     public void startThread() {
@@ -44,9 +87,7 @@ public class Screen extends JPanel implements Runnable {
             if (delta >= 1) {
                 if (currentWindow != null) {
                     currentWindow.update();
-                    if (!(currentWindow instanceof EntryCreator)) {
-                        currentWindow.repaint();
-                    }
+                    currentWindow.repaint();
                 }
                 delta--;
             }

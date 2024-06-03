@@ -14,8 +14,8 @@ public class EntryCreator extends Window {
 
     JButton saveButton, cancelButton;
 
-    public EntryCreator() {
-        super();
+    public EntryCreator(Screen s) {
+        super(s);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class EntryCreator extends Window {
         cancelButton = new JButton("Cancel");
         cancelButton.setBounds(x, y, 100, 25);
         cancelButton.addActionListener(list -> {
-
+            s.goBackToMenu();
         });
         this.add(cancelButton);
     }
@@ -47,10 +47,4 @@ public class EntryCreator extends Window {
     public void update() {
 
     }
-
-    @Override
-    public void paintComponent(Graphics g) {
-
-    }
-
 }
