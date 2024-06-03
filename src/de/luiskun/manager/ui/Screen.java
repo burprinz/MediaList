@@ -85,6 +85,7 @@ public class Screen extends JPanel implements Runnable {
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
             if (delta >= 1) {
+                repaint();
                 if (currentWindow != null) {
                     currentWindow.update();
                     currentWindow.repaint();

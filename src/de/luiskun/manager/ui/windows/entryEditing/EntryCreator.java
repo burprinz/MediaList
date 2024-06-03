@@ -31,6 +31,7 @@ public class EntryCreator extends Window {
         saveButton.addActionListener(list -> {
             Entry e = ei.getEntry();
             JsonHandler.saveEntry(e);
+            s.goBackToMenu();
         });
         this.add(saveButton);
         x += 110;

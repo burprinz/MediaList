@@ -25,8 +25,6 @@ public class StatsViewer extends Window implements ActionListener {
     ButtonGroup modeGroup;
     JRadioButton tableSelect, diagramSelect;
 
-    boolean tagsWindowOpened;
-
     Map<String, ButtonFunction> commands;
 
     public StatsViewer(Screen s) {
@@ -69,6 +67,7 @@ public class StatsViewer extends Window implements ActionListener {
 
         tableSelect = new JRadioButton("Table");
         tableSelect.setBounds(x, y, w, h);
+        tableSelect.setSelected(true);
         tableSelect.setActionCommand("modeSwitch");
         tableSelect.addActionListener(this);
         controlPanel.add(tableSelect);
@@ -91,6 +90,11 @@ public class StatsViewer extends Window implements ActionListener {
             s.goBackToMenu();
         });
         controlPanel.add(goBackB);
+    }
+
+    public void updateScrollPane() {
+        tableScroll.revalidate();
+        tableScroll.repaint();
     }
 
     @Override

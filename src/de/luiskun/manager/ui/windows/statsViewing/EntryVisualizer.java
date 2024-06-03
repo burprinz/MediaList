@@ -19,17 +19,21 @@ public class EntryVisualizer extends JPanel {
     public static final int TABLEMODE = 0;
     public static final int DIAGRAMMODE = 1;
     StatsViewer sv;
+    JCheckBox diaCheck;
     int mode;
     int w, h;
     List<Entry> entries;
     List<Entry> sortedEntries;
     DiagramInformation diagram;
 
+    int typeDiaMode;
+    int currentDiaMode = 0;
+
     public EntryVisualizer(List<Entry> entries, StatsViewer sv) {
         this.setLayout(null);
         this.sv = sv;
         this.entries = entries;
-        switchV(DIAGRAMMODE);
+        switchV(TABLEMODE);
     }
 
     /**
@@ -129,6 +133,7 @@ public class EntryVisualizer extends JPanel {
         });
         this.add(time);
         x += 200;
+
     }
 
     private void changeTable(List<Integer> pos) {
@@ -190,10 +195,15 @@ public class EntryVisualizer extends JPanel {
     public void switchToDiagram() {
         this.removeAll();
         initDiagramButtons();
-        diagram = new DiagramInformation(entries, sv.currentCats, sv.currentTags, 5);
+        updateDiagram();
+    }
+
+    private void updateDiagram() {
+        diagram = new DiagramInformation(entries, sv.currentCats, sv.currentTags, currentDiaMode);
         w = diagram.totalW;
         h = 660;
         this.setPreferredSize(new Dimension(w, h));
+        sv.updateScrollPane();
     }
 
     private void initDiagramButtons() {
@@ -203,7 +213,11 @@ public class EntryVisualizer extends JPanel {
         JButton typeB = new JButton("Type");
         typeB.setBounds(x, y, 100, 30);
         typeB.addActionListener(list -> {
-
+            if (typeDiaMode != 0) {
+                typeDiaMode = 0;
+                currentDiaMode = diaCheck.isSelected()?typeDiaMode+3:typeDiaMode;
+                updateDiagram();
+            }
         });
         this.add(typeB);
         x += 100;
@@ -211,7 +225,11 @@ public class EntryVisualizer extends JPanel {
         JButton rateB = new JButton("Rating");
         rateB.setBounds(x, y, 100, 30);
         rateB.addActionListener(list -> {
-
+            if (typeDiaMode != 1) {
+                typeDiaMode = 1;
+                currentDiaMode = diaCheck.isSelected()?typeDiaMode+3:typeDiaMode;
+                updateDiagram();
+            }
         });
         this.add(rateB);
         x += 100;
@@ -219,10 +237,27 @@ public class EntryVisualizer extends JPanel {
         JButton tagB = new JButton("Tag");
         tagB.setBounds(x, y, 100, 30);
         tagB.addActionListener(list -> {
-
+            if (typeDiaMode != 2) {
+                typeDiaMode = 2;
+                currentDiaMode = diaCheck.isSelected()?typeDiaMode+3:typeDiaMode;
+                updateDiagram();
+            }
         });
         this.add(tagB);
         x += 100;
+
+        diaCheck = new JCheckBox("Amount/Time");
+        diaCheck.setBounds(x, y, 100, 30);
+        diaCheck.addChangeListener(list -> {
+            if (diaCheck.isSelected() && currentDiaMode < 3) {
+                currentDiaMode = diaCheck.isSelected()?typeDiaMode+3:typeDiaMode;
+                updateDiagram();
+            } else if (!diaCheck.isSelected() && currentDiaMode > 2) {
+                currentDiaMode = diaCheck.isSelected()?typeDiaMode+3:typeDiaMode;
+                updateDiagram();
+            }
+        });
+        this.add(diaCheck);
 
         w = x;
     }

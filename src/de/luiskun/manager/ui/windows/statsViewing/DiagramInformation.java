@@ -103,7 +103,7 @@ public class DiagramInformation {
         }
 
         maxVal = getMaxVal();
-        totalW = names.length * elementW;
+        totalW = (names.length+1) * elementW;
     }
 
     private void initValueHashmap() {
@@ -128,7 +128,7 @@ public class DiagramInformation {
     public void draw(Graphics2D g2) {
         g2.setColor(Color.BLACK);
 
-        int x = 10;
+        int x = 10 + elementW/2;
         int y = maxH;
 
         float stepSize = (float) maxColH / (float) maxVal;
