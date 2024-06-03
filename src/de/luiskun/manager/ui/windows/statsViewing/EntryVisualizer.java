@@ -28,7 +28,7 @@ public class EntryVisualizer extends JPanel {
         this.setLayout(null);
         this.sv = sv;
         this.entries = entries;
-        switchV(TABLEMODE);
+        switchV(DIAGRAMMODE);
     }
 
     /**
@@ -187,7 +187,7 @@ public class EntryVisualizer extends JPanel {
     public void switchToDiagram() {
         this.removeAll();
         initDiagramButtons();
-        diagram = new DiagramInformation(entries, sv.currentCats, sv.currentTags, 2);
+        diagram = new DiagramInformation(entries, sv.currentCats, sv.currentTags, 1);
         w = diagram.totalW;
         h = 660;
         this.setPreferredSize(new Dimension(w, h));

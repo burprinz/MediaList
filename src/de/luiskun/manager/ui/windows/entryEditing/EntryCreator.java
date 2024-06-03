@@ -21,7 +21,6 @@ public class EntryCreator extends Window {
     @Override
     public void initComponents() {
         ei = new EntryInformation(this);
-        ei.setEntry(currentEntries.get(1));
         this.add(ei);
 
         int x = Screen.WIDTH - 215;

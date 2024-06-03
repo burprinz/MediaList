@@ -34,36 +34,61 @@ public class DiagramInformation {
         if (mode == 0) {
             // names setzen
             names = new String[types.size()];
+            values = new int[types.size()];
+            valueShow = new String[types.size()];
+
             for (int i = 0; i < types.size(); i++) names[i] = types.get(i);
 
-            // Werte setzen
-            valueIndex = new HashMap<>();
-            for (int i = 0; i < names.length; i++) {
-                valueIndex.put(names[i], i);
-            }
-            values = new int[types.size()];
+            initValueHashmap();
+
             for (Entry e : entries) {
                 values[valueIndex.get(e.getType())]++;
             }
-        } else if (mode == 1) {
 
+            initValueShowForVal();
+        } else if (mode == 1) {
+            names = new String[10];
+            values = new int[10];
+            valueShow = new String[10];
+
+            for (int i = 1; i <= 10; i++) names[i-1] = "" + i;
+
+            for (Entry e : entries) {
+                values[e.getRating()-1]++;
+            }
+
+            initValueShowForVal();
         } else if (mode == 2) {
             names = new String[tags.size()];
+            values = new int[tags.size()];
+            valueShow = new String[tags.size()];
+
             for (int i = 0; i < tags.size(); i++) names[i] = tags.get(i);
 
-            // Werte setzen
-            valueIndex = new HashMap<>();
-            for (int i = 0; i < names.length; i++) {
-                valueIndex.put(names[i], i);
-            }
-            values = new int[tags.size()];
+            initValueHashmap();
+
             for (Entry e : entries) {
                 for (String s : e.getTags()) values[valueIndex.get(s)]++;
             }
+
+            initValueShowForVal();
         }
 
         maxVal = getMaxVal();
         totalW = names.length * elementW;
+    }
+
+    private void initValueHashmap() {
+        valueIndex = new HashMap<>();
+        for (int i = 0; i < names.length; i++) {
+            valueIndex.put(names[i], i);
+        }
+    }
+
+    private void initValueShowForVal() {
+        for (int i = 0; i < values.length; i++) {
+            valueShow[i] = "" + values[i];
+        }
     }
 
     public void draw(Graphics2D g2) {
@@ -72,18 +97,23 @@ public class DiagramInformation {
         int x = 10;
         int y = maxH;
 
-        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 20));
-
         float stepSize = (float) maxColH / (float) maxVal;
 
         for (int i = 0; i < names.length; i++) {
+            int h = (int) (stepSize * values[i]);
+            int yC = y - textH - h;
             g2.setColor(Color.BLACK);
             String s = names[i];
+            String ss = valueShow[i];
+
+            g2.setFont(g2.getFont().deriveFont(Font.BOLD, 20));
             g2.drawString(s, x+Geo.getXForCenteredText(s, elementW, g2), y-5);
 
+            g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 15));
+            g2.drawString(ss, x+Geo.getXForCenteredText(ss, elementW, g2), yC-5);
+
             g2.setColor(Color.DARK_GRAY);
-            int h = (int) (stepSize * values[i]);
-            g2.fillRect(x+(elementW-colW)/2, y - textH - h, colW, h);
+            g2.fillRect(x+(elementW-colW)/2, yC, colW, h);
 
             x += elementW;
         }
