@@ -1,11 +1,13 @@
 package de.luiskun.manager.ui;
 
+import de.luiskun.manager.tools.FileHadler;
 import de.luiskun.manager.ui.windows.entryEditing.EntryCreator;
 import de.luiskun.manager.ui.windows.statsViewing.StatsViewer;
 import de.luiskun.manager.ui.windows.Window;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class Screen extends JPanel implements Runnable {
 
@@ -13,16 +15,22 @@ public class Screen extends JPanel implements Runnable {
     Thread t;
     int fps = 60;
 
+    // Menu
     JPanel menu;
+    boolean menuOpened;
 
     JButton createButton, editButton, statsButton;
-
     Window currentWindow;
+
+    // Texture
+    JLabel menuBackground;
 
     public Screen() {
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setDoubleBuffered(true);
         this.setLayout(null);
+
+        menuOpened = true;
 
         menu = new JPanel();
         menu.setBounds(0, 0, WIDTH, HEIGHT);
@@ -55,16 +63,22 @@ public class Screen extends JPanel implements Runnable {
         });
         menu.add(statsButton);
 
+        menuBackground = new JLabel(new ImageIcon("res/text/background.png"));
+        menuBackground.setBounds(0, 0, WIDTH, HEIGHT);
+        menu.add(menuBackground);
+
     }
 
     private void switchWindow(Window w) {
         menu.setVisible(false);
+        menuOpened = false;
         currentWindow = w;
         this.add(currentWindow);
     }
 
     public void goBackToMenu() {
         this.remove(currentWindow);
+        menuOpened = true;
         currentWindow = null;
         menu.setVisible(true);
     }
@@ -72,6 +86,12 @@ public class Screen extends JPanel implements Runnable {
     public void startThread() {
         t = new Thread(this);
         t.start();
+    }
+
+    private void update() {
+
+
+
     }
 
     @Override
@@ -85,7 +105,7 @@ public class Screen extends JPanel implements Runnable {
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
             if (delta >= 1) {
-                repaint();
+                update();
                 if (currentWindow != null) {
                     currentWindow.update();
                     currentWindow.repaint();
