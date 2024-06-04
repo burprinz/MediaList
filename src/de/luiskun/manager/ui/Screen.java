@@ -20,7 +20,7 @@ public class Screen extends JPanel implements Runnable {
     boolean menuOpened;
 
     JButton createButton, editButton, statsButton;
-    Window currentWindow;
+    volatile Window currentWindow;
 
     // Texture
     JLabel menuBackground;
@@ -66,7 +66,6 @@ public class Screen extends JPanel implements Runnable {
         menuBackground = new JLabel(new ImageIcon("res/text/background.png"));
         menuBackground.setBounds(0, 0, WIDTH, HEIGHT);
         menu.add(menuBackground);
-
     }
 
     private void switchWindow(Window w) {
