@@ -2,6 +2,7 @@ package de.luiskun.manager.ui;
 
 import de.luiskun.manager.tools.FileHadler;
 import de.luiskun.manager.ui.windows.entryEditing.EntryCreator;
+import de.luiskun.manager.ui.windows.menu.MenuShow;
 import de.luiskun.manager.ui.windows.statsViewing.StatsViewer;
 import de.luiskun.manager.ui.windows.Window;
 
@@ -24,6 +25,7 @@ public class Screen extends JPanel implements Runnable {
 
     // Texture
     JLabel menuBackground;
+    MenuShow menuShow;
 
     public Screen() {
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -35,7 +37,6 @@ public class Screen extends JPanel implements Runnable {
         menu = new JPanel();
         menu.setBounds(0, 0, WIDTH, HEIGHT);
         menu.setLayout(null);
-        this.add(menu);
 
         int x = 10;
         int y = 10;
@@ -63,9 +64,16 @@ public class Screen extends JPanel implements Runnable {
         });
         menu.add(statsButton);
 
+        menuShow = new MenuShow();
+        menuShow.setLayout(null);
+        menuShow.setBounds(0, HEIGHT/2, WIDTH, HEIGHT/2);
+        menu.add(menuShow);
+
         menuBackground = new JLabel(new ImageIcon("res/text/background.png"));
         menuBackground.setBounds(0, 0, WIDTH, HEIGHT);
         menu.add(menuBackground);
+
+        this.add(menu);
     }
 
     private void switchWindow(Window w) {
@@ -88,9 +96,11 @@ public class Screen extends JPanel implements Runnable {
     }
 
     private void update() {
+        menuShow.removeAll();
+        menuShow.update();
+        menuShow.repaint();
 
-
-
+       this.repaint();
     }
 
     @Override
@@ -104,10 +114,11 @@ public class Screen extends JPanel implements Runnable {
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
             if (delta >= 1) {
-                update();
                 if (currentWindow != null) {
                     currentWindow.update();
                     currentWindow.repaint();
+                } else {
+                    update();
                 }
                 delta--;
             }

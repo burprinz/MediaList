@@ -1,8 +1,12 @@
 package de.luiskun.manager.tools;
 
+import de.luiskun.manager.Quicksort;
 import de.luiskun.manager.dataholder.Category;
 import de.luiskun.manager.dataholder.Entry;
 import de.luiskun.manager.dataholder.Episode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EntryCalculator {
 
@@ -29,7 +33,7 @@ public class EntryCalculator {
                 }
             }
         }
-        return len;
+        return len * (e.getReAmount()+1);
     }
 
     public static String createLenString(int len) {
@@ -70,6 +74,46 @@ public class EntryCalculator {
 
 
         return s;
+    }
+
+    public static String getMostViewedTagInfo(List<String> tags, List<Entry> entries) {
+        List<Integer> tagLens = new ArrayList<>();
+        for (String tag : tags) {
+            int len = 0;
+            for (Entry e : entries) {
+                for (String cmp : e.getTags()) {
+                    if (tag.equals(cmp)) {
+                        len += getSeconds(e);
+                    }
+                }
+            }
+            tagLens.add(len);
+        }
+
+        List<Integer> index = Quicksort.insInt(tagLens);
+        int maxLen = tagLens.get(index.get(0));
+        String maxStr = tags.get(index.get(0));
+
+        return "Highest Tag: " + maxStr + ") " + createLenString(maxLen);
+    }
+
+    public static String getMostViewedCatInfo(List<String> cats, List<Entry> entries) {
+        List<Integer> catLens = new ArrayList<>();
+        for (String cat : cats) {
+            int len = 0;
+            for (Entry e : entries) {
+                if (cat.equals(e.getType())) {
+                    len += getSeconds(e);
+                }
+            }
+            catLens.add(len);
+        }
+
+        List<Integer> index = Quicksort.insInt(catLens);
+        int maxLen = catLens.get(index.get(0));
+        String maxStr = cats.get(index.get(0));
+
+        return "Highest Category: " + maxStr + ") " + createLenString(maxLen);
     }
 
 }
