@@ -1,7 +1,9 @@
 package de.luiskun.manager.ui;
 
 import de.luiskun.manager.tools.FileHadler;
+import de.luiskun.manager.ui.windows.achievements.Achievements;
 import de.luiskun.manager.ui.windows.entryEditing.EntryCreator;
+import de.luiskun.manager.ui.windows.entryEditing.EntryEditor;
 import de.luiskun.manager.ui.windows.menu.MenuShow;
 import de.luiskun.manager.ui.windows.statsViewing.StatsViewer;
 import de.luiskun.manager.ui.windows.Window;
@@ -20,7 +22,7 @@ public class Screen extends JPanel implements Runnable {
     JPanel menu;
     boolean menuOpened;
 
-    JButton createButton, editButton, statsButton;
+    JButton createButton, editButton, statsButton, achievementsButton;
     volatile Window currentWindow;
 
     // Texture
@@ -52,7 +54,7 @@ public class Screen extends JPanel implements Runnable {
         editButton = new JButton("Edit Element");
         editButton.setBounds(x, y, 150, 30);
         editButton.addActionListener(list -> {
-
+            switchWindow(new EntryEditor(this));
         });
         menu.add(editButton);
         y += 40;
@@ -63,6 +65,16 @@ public class Screen extends JPanel implements Runnable {
             switchWindow(new StatsViewer(this));
         });
         menu.add(statsButton);
+
+        y = 10;
+        x += 160;
+
+        achievementsButton = new JButton("Achievements");
+        achievementsButton.setBounds(x, y, 150, 30);
+        achievementsButton.addActionListener(list -> {
+            switchWindow(new Achievements(this));
+        });
+        menu.add(achievementsButton);
 
         menuShow = new MenuShow();
         menuShow.setLayout(null);

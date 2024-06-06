@@ -94,18 +94,13 @@ public class EntryCalculator {
         int maxLen = tagLens.get(index.get(0));
         String maxStr = tags.get(index.get(0));
 
-        return "Highest Tag: " + maxStr + ") " + createLenString(maxLen);
+        return "Highest Tag (" + maxStr + "): " + createLenString(maxLen);
     }
 
     public static String getMostViewedCatInfo(List<String> cats, List<Entry> entries) {
         List<Integer> catLens = new ArrayList<>();
         for (String cat : cats) {
-            int len = 0;
-            for (Entry e : entries) {
-                if (cat.equals(e.getType())) {
-                    len += getSeconds(e);
-                }
-            }
+            int len = getCatSeconds(cat, entries);
             catLens.add(len);
         }
 
@@ -113,7 +108,24 @@ public class EntryCalculator {
         int maxLen = catLens.get(index.get(0));
         String maxStr = cats.get(index.get(0));
 
-        return "Highest Category: " + maxStr + ") " + createLenString(maxLen);
+        return "Highest Category (" + maxStr + "): " + createLenString(maxLen);
     }
 
+    public static final List<String> getNames(List<Entry> entries) {
+        List<String> names = new ArrayList<>();
+        for (Entry e : entries) {
+            names.add(e.getName());
+        }
+        return names;
+    }
+
+    public static int getCatSeconds(String cat, List<Entry> entries) {
+        int secs = 0;
+        for (Entry e : entries) {
+            if (e.getType().equals(cat)) {
+                secs += getSeconds(e);
+            }
+        }
+        return secs;
+    }
 }

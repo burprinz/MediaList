@@ -7,6 +7,8 @@ import de.luiskun.manager.ui.windows.Window;
 
 import javax.swing.*;
 import java.awt.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class EntryCreator extends Window {
 
@@ -30,8 +32,19 @@ public class EntryCreator extends Window {
         saveButton.setBounds(x, y, 100, 25);
         saveButton.addActionListener(list -> {
             Entry e = ei.getEntry();
-            JsonHandler.saveEntry(e);
-            s.goBackToMenu();
+
+            String name = e.getName();
+
+            if (!Files.exists(Paths.get("res/data/entries/" + name + ".json"))) {
+                JsonHandler.saveEntry(e);
+                s.goBackToMenu();
+            } else {
+                int reply = JOptionPane.showConfirmDialog(null, "This name already exists. Overwrite?", "Alert", JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION) {
+                    JsonHandler.saveEntry(e);
+                    s.goBackToMenu();
+                }
+            }
         });
         this.add(saveButton);
         x += 110;
@@ -39,7 +52,11 @@ public class EntryCreator extends Window {
         cancelButton = new JButton("Cancel");
         cancelButton.setBounds(x, y, 100, 25);
         cancelButton.addActionListener(list -> {
-            s.goBackToMenu();
+            int reply = JOptionPane.showConfirmDialog(null, "Do you really want to exit? The entry will be lost",
+                    "Alert", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                s.goBackToMenu();
+            }
         });
         this.add(cancelButton);
     }

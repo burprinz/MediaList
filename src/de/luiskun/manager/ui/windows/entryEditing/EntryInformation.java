@@ -3,6 +3,7 @@ package de.luiskun.manager.ui.windows.entryEditing;
 import de.luiskun.manager.dataholder.Category;
 import de.luiskun.manager.dataholder.Entry;
 import de.luiskun.manager.dataholder.Episode;
+import de.luiskun.manager.tools.JsonHandler;
 import de.luiskun.manager.ui.Konstanten;
 import de.luiskun.manager.ui.Screen;
 import de.luiskun.manager.ui.windows.Window;
@@ -690,11 +691,11 @@ public class EntryInformation extends JPanel implements ActionListener {
         entryName.setText(e.getName());
         ratingSetter.setValue(e.getRating());
         amountRewatched.setValue(e.getReAmount());
+        categorySelector.setSelectedItem(e.getType());
         withCategories.setSelected(e.isWithCategories());
         sameLength.setSelected(e.isSameLength());
         sameMin.setValue(e.getLength()/60);
         sameSec.setValue(e.getLength()%60);
-
         resetTagButtons();
         updateCategories(e.isSameLength(), e.isWithCategories());
     }

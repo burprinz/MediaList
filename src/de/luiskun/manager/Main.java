@@ -1,5 +1,6 @@
 package de.luiskun.manager;
 
+import de.luiskun.manager.tools.PointCalculator;
 import de.luiskun.manager.ui.Screen;
 
 import javax.swing.*;
@@ -20,6 +21,7 @@ public class Main {
         frame.setVisible(true);
 
         s.startThread();
+
     }
 
 
