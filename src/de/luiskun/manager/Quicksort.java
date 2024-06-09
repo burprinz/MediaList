@@ -97,6 +97,7 @@ public class Quicksort {
                 if (arr.get(j) > arr.get(min_idx))
                     min_idx = j;
 
+            // swap
             int temp = arr.get(min_idx);
             arr.set(min_idx, arr.get(i));;
             arr.set(i, temp);

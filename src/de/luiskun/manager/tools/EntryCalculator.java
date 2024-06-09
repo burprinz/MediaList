@@ -105,9 +105,8 @@ public class EntryCalculator {
         }
 
         List<Integer> index = Quicksort.insInt(catLens);
-        int maxLen = catLens.get(index.get(0));
         String maxStr = cats.get(index.get(0));
-
+        int maxLen = getCatSeconds(maxStr, entries);
         return "Highest Category (" + maxStr + "): " + createLenString(maxLen);
     }
 

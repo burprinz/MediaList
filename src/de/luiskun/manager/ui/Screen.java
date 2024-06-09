@@ -40,37 +40,47 @@ public class Screen extends JPanel implements Runnable {
         menu.setBounds(0, 0, WIDTH, HEIGHT);
         menu.setLayout(null);
 
-        int x = 10;
-        int y = 10;
+        int x = 100;
+        int y = 25;
 
-        createButton = new JButton("Create Element");
-        createButton.setBounds(x, y, 150, 30);
+        createButton = new JButton(new ImageIcon("res/text/createButton.png"));
+        createButton.setOpaque(false);
+        createButton.setContentAreaFilled(false);
+        createButton.setBorderPainted(false);
+        createButton.setBounds(x, y, 170, 100);
         createButton.addActionListener(list -> {
             switchWindow(new EntryCreator(this));
         });
         menu.add(createButton);
-        y += 40;
+        x += 180;
 
-        editButton = new JButton("Edit Element");
-        editButton.setBounds(x, y, 150, 30);
+        editButton = new JButton(new ImageIcon("res/text/editButton.png"));
+        editButton.setOpaque(false);
+        editButton.setContentAreaFilled(false);
+        editButton.setBorderPainted(false);
+        editButton.setBounds(x, y, 170, 100);
         editButton.addActionListener(list -> {
             switchWindow(new EntryEditor(this));
         });
         menu.add(editButton);
-        y += 40;
+        x += 180;
 
-        statsButton = new JButton("Show Stats");
-        statsButton.setBounds(x, y, 150, 30);
+        statsButton = new JButton(new ImageIcon("res/text/statsButton.png"));
+        statsButton.setOpaque(false);
+        statsButton.setContentAreaFilled(false);
+        statsButton.setBorderPainted(false);
+        statsButton.setBounds(x, y, 170, 100);
         statsButton.addActionListener(list -> {
             switchWindow(new StatsViewer(this));
         });
         menu.add(statsButton);
+        x += 180;
 
-        y = 10;
-        x += 160;
-
-        achievementsButton = new JButton("Achievements");
-        achievementsButton.setBounds(x, y, 150, 30);
+        achievementsButton = new JButton(new ImageIcon("res/text/achievementyButton.png"));
+        achievementsButton.setOpaque(false);
+        achievementsButton.setContentAreaFilled(false);
+        achievementsButton.setBorderPainted(false);
+        achievementsButton.setBounds(x, y, 170, 100);
         achievementsButton.addActionListener(list -> {
             switchWindow(new Achievements(this));
         });
