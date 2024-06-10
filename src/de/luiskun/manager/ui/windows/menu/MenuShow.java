@@ -1,10 +1,7 @@
 package de.luiskun.manager.ui.windows.menu;
 
 import de.luiskun.manager.dataholder.Entry;
-import de.luiskun.manager.tools.EntryCalculator;
-import de.luiskun.manager.tools.Geo;
-import de.luiskun.manager.tools.JsonHandler;
-import de.luiskun.manager.tools.Vektor;
+import de.luiskun.manager.tools.*;
 import de.luiskun.manager.ui.Screen;
 import org.locationtech.jts.geom.Geometry;
 
@@ -26,7 +23,7 @@ public class MenuShow extends JPanel {
     int growSpeed = 3;
 
     // Text
-    String overall, tags, cats, level;
+    String overall, tags, cats, level, amEntries;
 
     public MenuShow() {
 
@@ -37,9 +34,11 @@ public class MenuShow extends JPanel {
         for (Entry e : entries) {
             amsecs += EntryCalculator.getSeconds(e);
         }
+        int hours = amsecs/3600;
 
-        level = "Level x";
+        level = "Level " + PointCalculator.toLevel(hours);
         overall = "Total time: " + EntryCalculator.createLenString(amsecs);
+        amEntries = EntryCalculator.getAmountEntries() + " Entries";
         this.tags = EntryCalculator.getMostViewedTagInfo(tags, entries);
         this.cats = EntryCalculator.getMostViewedCatInfo(cats, entries);
     }
@@ -92,8 +91,12 @@ public class MenuShow extends JPanel {
 
             g2.setFont(g2.getFont().deriveFont(Font.BOLD, 30));
 
+            tx = x + Geo.getXForCenteredText(amEntries, w, g2);
+            ty += 30;
+            g2.drawString(amEntries, tx, ty);
+
             tx = x + Geo.getXForCenteredText(overall, w, g2);
-            ty += 100;
+            ty += 70;
             g2.drawString(overall, tx, ty);
 
             tx = x + Geo.getXForCenteredText(tags, w, g2);

@@ -5,6 +5,7 @@ import de.luiskun.manager.dataholder.Category;
 import de.luiskun.manager.dataholder.Entry;
 import de.luiskun.manager.dataholder.Episode;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,5 +127,9 @@ public class EntryCalculator {
             }
         }
         return secs;
+    }
+
+    public static int getAmountEntries() {
+        return new File("res/data/entries").listFiles().length;
     }
 }
