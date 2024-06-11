@@ -1,1 +1,1 @@
-{"name":"Your Name","type":"Film","reAmount":3,"withCategories":false,"sameLength":false,"length":0,"rating":10,"episodes":[{"name":"Your Name","length":6360}],"categories":null,"tags":["Drama","Supernatural","Romance"]}
+{"name":"Your Name","type":"Animefilm","reAmount":5,"rating":10,"withCategories":false,"sameLength":false,"length":0,"episodes":[{"name":"Episode 1","length":6360}],"categories":[{"name":"Episode 1","length":6360,"amEpisodes":0}],"tags":["Drama","Romance","Supernatural"]}

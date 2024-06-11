@@ -110,6 +110,7 @@ public class Screen extends JPanel implements Runnable {
         menuOpened = true;
         currentWindow = null;
         menu.setVisible(true);
+        menuShow.resetInfos();
     }
 
     public void startThread() {

@@ -27,6 +27,10 @@ public class MenuShow extends JPanel {
 
     public MenuShow() {
 
+        resetInfos();
+    }
+
+    public void resetInfos() {
         List<Entry> entries = JsonHandler.readEntries();
         List<String> tags = JsonHandler.readAllTags(entries);
         List<String> cats = JsonHandler.readAllCats(entries);
@@ -35,7 +39,6 @@ public class MenuShow extends JPanel {
             amsecs += EntryCalculator.getSeconds(e);
         }
         int hours = amsecs/3600;
-
         level = "Level " + PointCalculator.toLevel(hours);
         overall = "Total time: " + EntryCalculator.createLenString(amsecs);
         amEntries = EntryCalculator.getAmountEntries() + " Entries";
